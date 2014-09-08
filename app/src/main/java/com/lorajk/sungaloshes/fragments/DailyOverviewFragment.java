@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lorajk.sungaloshes.R;
+import com.lorajk.sungaloshes.adapters.DailyOverviewAdapter;
 
 import java.util.zip.Inflater;
 
@@ -22,16 +23,29 @@ public class DailyOverviewFragment extends Fragment{
     TextView mIconTextView;
     @InjectView(R.id.temperature)
     TextView mTempTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.daily_overview_fragment, container, false);
         ButterKnife.inject(this, view);
+        String icon = "cloud-to-butt";
+        Double temp = 9001.0;
 
-        mIconTextView.setText("partly-cloudy-day");
-        mTempTextView.setText("87.26");
+        Bundle args = getArguments();
+        if(args != null){
+            if(args.containsKey(DailyOverviewAdapter.ARG_ICON)){
+                icon = args.getString(DailyOverviewAdapter.ARG_ICON);
+            }
+            if(args.containsKey(DailyOverviewAdapter.ARG_TEMP)){
+                temp = args.getDouble(DailyOverviewAdapter.ARG_TEMP);
+            }
 
+            mIconTextView.setText(icon);
+            mTempTextView.setText(temp.toString());
+        }
         return view;
     }
+
 
     @Override
     public void onDestroyView() {

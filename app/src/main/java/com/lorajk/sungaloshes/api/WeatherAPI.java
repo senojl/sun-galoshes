@@ -37,7 +37,6 @@ public class WeatherAPI {
         }
         try {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            readStream(in);
             String responseString = readStream(in);
             try {
                 jsonObject = new JSONObject(responseString);
@@ -46,8 +45,12 @@ public class WeatherAPI {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch(NullPointerException e){
+            e.printStackTrace();
         } finally {
-            urlConnection.disconnect();
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
 
         return jsonObject;
