@@ -2,24 +2,43 @@ package com.lorajk.sungaloshes.activities;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.lorajk.sungaloshes.R;
 import com.lorajk.sungaloshes.adapters.DailyOverviewAdapter;
+import com.lorajk.sungaloshes.api.WeatherAPI;
+import com.lorajk.sungaloshes.api.WeatherAPIConstants;
+import com.lorajk.sungaloshes.fragments.DailyOverviewFragment;
+import com.lorajk.sungaloshes.interfaces.ForecastInterface;
+import com.lorajk.sungaloshes.models.Currently;
+import com.lorajk.sungaloshes.models.ForecastResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class SunGaloshesActivity extends Activity {
+public class SunGaloshesActivity extends Activity implements ForecastInterface{
+    private static final String TAG = SunGaloshesActivity.class.getSimpleName() ;
     @InjectView(R.id.daily_overview_pager)
     ViewPager mDailyOverviewPager;
 
     DailyOverviewAdapter mDailyOverviewAdapter;
+
+    String url = "https://"
+            + WeatherAPIConstants.FORECAST_IO_URL
+            + "/" + WeatherAPIConstants.FORECAST_IO_RELATIVE
+            + "/" + WeatherAPIConstants.FORECAST_API_KEY
+            + "/" + WeatherAPIConstants.LAT_AUSTIN
+            + "," + WeatherAPIConstants.LONG_AUSTIN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +49,18 @@ public class SunGaloshesActivity extends Activity {
         mDailyOverviewAdapter = new DailyOverviewAdapter(getFragmentManager());
 
         mDailyOverviewPager.setAdapter(mDailyOverviewAdapter);
+
+        getForecast();
     }
 
+    public JSONObject getForecast() {
+
+        ForecastTask task = new ForecastTask(url, this);
+
+        task.execute();
+
+        return null;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,5 +85,22 @@ public class SunGaloshesActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.reset(this);
+    }
+
+    @Override
+    public void onForecastFinished(JSONObject result) {
+        ForecastResponse forecastResponse = new ForecastResponse();
+        Currently currently = new Currently();
+
+        try {
+            JSONObject currentlyJobject = result.getJSONObject("currently");
+
+            currently.setTemperature(currentlyJobject.getDouble("temperature"));
+            currently.setIcon(currentlyJobject.getString("icon"));
+        } catch (JSONException e){
+            Log.e(TAG, "Yo dawg, Couldn't parse forecastresponse", e);
+        }
+        forecastResponse.setCurrently(currently);
+        mDailyOverviewAdapter.setData(forecastResponse);
     }
 }
