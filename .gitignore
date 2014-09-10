@@ -1,6 +1,45 @@
-.gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# Package Files #
+
+*.war
+*.ear
+
+bin/
+gen/
 .DS_Store
-/build
+local.properties
+
+# Sublime Text project files
+*.sublime-*
+
+# Eclipse Stuff
+.classpath
+.project
+.metadata
+.settings
+
+# Proguard folder
+proguard/
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
+
+*build/
+
+# Ignore Gradle files
+gradle-wrapper*.jar
+.gradle
