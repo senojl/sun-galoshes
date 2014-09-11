@@ -1,23 +1,18 @@
 package com.lorajk.sungaloshes.activities;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.lorajk.sungaloshes.R;
 import com.lorajk.sungaloshes.adapters.DailyOverviewAdapter;
-import com.lorajk.sungaloshes.api.WeatherAPI;
 import com.lorajk.sungaloshes.api.WeatherAPIConstants;
-import com.lorajk.sungaloshes.fragments.DailyOverviewFragment;
 import com.lorajk.sungaloshes.interfaces.ForecastInterface;
-import com.lorajk.sungaloshes.models.Currently;
-import com.lorajk.sungaloshes.models.ForecastResponse;
+import com.lorajk.sungaloshes.models.forecast.Currently;
+import com.lorajk.sungaloshes.models.forecast.ForecastResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,13 +48,9 @@ public class SunGaloshesActivity extends Activity implements ForecastInterface{
         getForecast();
     }
 
-    public JSONObject getForecast() {
-
+    public void getForecast() {
         ForecastTask task = new ForecastTask(url, this);
-
         task.execute();
-
-        return null;
     }
 
     @Override
