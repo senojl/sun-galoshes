@@ -30,6 +30,5 @@ public class ForecastTask extends AsyncTask<Void, Void, JSONObject> {
 
     protected void onPostExecute(JSONObject result) {
         mListener.onForecastFinished(result);
-
     }
 }
